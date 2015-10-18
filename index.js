@@ -3,7 +3,7 @@
  * @name base64test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.007
+ * @version 0.0.008
  */
  export default base64test;
   import dbg from 'debug';
