@@ -3,7 +3,7 @@
  * @name base646test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.020
+ * @version 0.0.021
  */
  export default base646test;
   import dbg from 'debug';
@@ -94,9 +94,9 @@ this.speechStr=function (str){
     var inum=-1;
     
     speechStr_index++;
-    if(speechStr_index>=str.length)index=0;
+    if(speechStr_index>=str.length)speechStr_index=0;
     inum=keyStr1.indexOf(str.charAt(speechStr_index));
-    if(inum==-1){speechStr_off=-11025/4;}
+    if(inum==-1){speechStr_off=-11025;}
     else {
       speechStr_off=pos1[inum];
     dbg("ccc ")(str.charAt(speechStr_index));
