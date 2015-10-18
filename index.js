@@ -3,7 +3,7 @@
  * @name base64test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.006
+ * @version 0.0.007
  */
  export default base64test;
   import dbg from 'debug';
@@ -77,7 +77,6 @@ var Base64={_keyStr:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 Base64.decode2(vowel118,ttw1u8);
 //for(var ai=0;ai<ttw1u8.length;ai++)
 // ttw1u8[ai]=ttwbase64Dat.charAt(ai);//Math.random()*256;//Math.sin(ai/30.0*3.1415*2);
-dbg('SampleRate555')(ttw1u8[4]+'_'+ttw1u8.length);
 
 function wav8ToFloat32Array(buffer){
   var view = new DataView(buffer, 44);
@@ -93,11 +92,11 @@ function wav8ToFloat32Array(buffer){
   return floats;
 }    
   
-dbg('SampleRate5545')(ttw1);
+
 
 var ttwBuf=wav8ToFloat32Array(ttw1);
   
-dbg('SampleRate55445')(ttwBuf.length);
+
 
 var ii=0; 
 //export 
