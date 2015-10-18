@@ -7,11 +7,11 @@ import speech from './index.js';
   
   
 var speecha = speech();   
-
-dbg('asdf2 ')(speecha.qwer().rrrr);
+var qqq=speecha.qwer();
+dbg('asdf3 ')(qqq.rrrr);
 
 export function dsp(t)
 {
-  return speecha.qwer().dsp(t);
+  return qqq.dsp(t);
   //return Math.sin(300*t*3.141592*2);
 }
