@@ -3,10 +3,15 @@
  * test
  */
 import speech from './index.js';
-var speecha = speech(); 
+  import dbg from 'debug';
+  
+  
+var speecha = speech();   
+
+dbg('asdf')(speecha.qwer().rrrr);
 
 export function dsp(t)
 {
-  return speecha.qwer.dsp(t);
+  return speecha.qwer().dsp(t);
   //return Math.sin(300*t*3.141592*2);
 }
