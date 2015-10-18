@@ -8,7 +8,7 @@ import speech from './index.js';
   
 var speecha = speech();   
 var qqq=speecha.qwer();
-dbg('asdf6 ')(qqq.rrrr);
+dbg('asdf7 ')(qqq.rrrr);
 
 export function dsp(t)
 {
