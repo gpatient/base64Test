@@ -3,7 +3,7 @@
  * @name base646test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.018
+ * @version 0.0.020
  */
  export default base646test;
   import dbg from 'debug';
@@ -71,7 +71,7 @@ var pos3=[0, 1.84888, 3.764, 4.426, 5.423,  6.531,  7.8476];
 var speechSstr='pu po bo to ko ga fa';
 
 var speechStr_index=0;
-var speechStr_off=0;
+var speechStr_off=0,speechStr_offs=0;
 var constant1arrbuf=new ArrayBuffer(Math.ceil(constant1.length*6/8));
 var constant1u8=new Uint8Array(constant1arrbuf);
   Base64.decode2(constant1,constant1u8);
@@ -86,6 +86,7 @@ this.speechStr=function (str){
   {
     speechStr_off+=0.25;
 	if(speechStr_off<0)return 0;
+	if(speechStr_offs+3100<speechStr_off)return false;
 	return buf[Math.floor(speechStr_off)%(buf.length)];
   }
   out=playBuf(constant1buf);
@@ -96,7 +97,12 @@ this.speechStr=function (str){
     if(speechStr_index>=str.length)index=0;
     inum=keyStr1.indexOf(str.charAt(speechStr_index));
     if(inum==-1){speechStr_off=-11025/4;}
-    else speechStr_off=pos1[inum];
+    else {
+      speechStr_off=pos1[inum];
+    dbg("ccc ")(str.charAt(speechStr_index));
+      
+    }
+    speechStr_offs=speechStr_off;
     out=playBuf(constant1buf);
   }
   return out;
