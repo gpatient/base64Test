@@ -3,7 +3,7 @@
  * @name base646test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.028
+ * @version 0.0.032
  */
  export default base646test;
   import dbg from 'debug';
@@ -177,6 +177,7 @@ var kdft={
 		 this.tables[0][j][i]=this.tableMain[0][pos];
 		 this.tables[1][j][i]=this.tableMain[1][pos];
 		 pos+=(j+1);
+		 pos%=tlen;
 		}
 	   }
     };
@@ -216,24 +217,19 @@ var kdft={
 		var abuf=new Float32Array(blen);
 
     for(i=0;i<blen;i++)abuf[i]=0;
-		abuf[0]=44;
-		dbg('ift blen')(abuf[0]+' '+blen+' '+this.resultTables[0][0][0]*this.tables[1][0][0]);
-    var str=' ';
-		while(pos+tableLen<blen){
-		str+=abuf[0]+ ' ';i=0;
-		 // for(i=0;i<tableLen;i++){
+			while(pos+tableLen<blen){
+		  for(i=10;i<tableLen/2;i++){
 			  for(j=0;j<tableLen;j++){
 				  abuf[j+pos]+=this.resultTables[0][pp][i]*this.tables[0][i][j];
 				  abuf[j+pos]+=this.resultTables[1][pp][i]*this.tables[1][i][j];
 				
 			  }
 			
-		  //}
+		  }
 		pp++;
 		pos+=tableLen;
 		
 		}
-		dbg('abuf ')(abuf[0]+' '+pos+' '+pp+str);
 		return abuf;
 	};
   
@@ -247,7 +243,6 @@ var kdftCode=kdft.mainCode();
 kdftCode.initTables(100);
 kdftCode.dft(ttwBuf);
 var testBuf=kdftCode.ift();
-dbg('aa')(testBuf[0]);
 var ii=0; 
 //export 
 this.dsp=function(t){
