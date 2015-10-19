@@ -3,7 +3,7 @@
  * @name base646test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.032
+ * @version 0.0.033
  */
  export default base646test;
   import dbg from 'debug';
@@ -168,8 +168,13 @@ var kdft={
 
 		}
 	   for(i=0;i<tlen;i++){
-		this.tableMain[0][i]=Math.sin(i*tau/tlen);
-		this.tableMain[1][i]=Math.cos(i*tau/tlen);
+		this.tableMain[0][i]=Math.sin(i*tau/tlen+tau/tlen/2);
+		this.tableMain[1][i]=Math.cos(i*tau/tlen+tau/tlen/2);
+		//this.tableMain[0][i]=Math.sin(i*tau/tlen)*0.1
+		//                    +Math.sin(i*1*tau/tlen+Math.sin(i*0*tau/tlen)*0.0)*1.1;
+		//this.tableMain[1][i]=Math.cos(i*tau/tlen)*0.1
+		//                    +Math.cos(i*1*tau/tlen+Math.cos(i*0*tau/tlen)*0.0)*1.1;
+		                  ;
 	   }
 	   for(j=0;j<tlen;j++){
 		var pos=0;
@@ -218,7 +223,7 @@ var kdft={
 
     for(i=0;i<blen;i++)abuf[i]=0;
 			while(pos+tableLen<blen){
-		  for(i=10;i<tableLen/2;i++){
+		  for(i=0;i<tableLen/2;i++){
 			  for(j=0;j<tableLen;j++){
 				  abuf[j+pos]+=this.resultTables[0][pp][i]*this.tables[0][i][j];
 				  abuf[j+pos]+=this.resultTables[1][pp][i]*this.tables[1][i][j];
