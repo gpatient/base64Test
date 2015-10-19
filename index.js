@@ -142,7 +142,7 @@ var ii=0;
 //export 
 this.dsp=function(t){
   var out=0;
-  ii++;
+  ii+=0.25;
   out=ttwBuf[Math.floor(ii)%(ttwBuf.length)] ;
   //return t%0.01*100; 
   return out;
