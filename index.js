@@ -3,7 +3,7 @@
  * @name base646test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.044
+ * @version 0.0.045
  */
  export default base646test;
   import dbg from 'debug';
@@ -278,7 +278,7 @@ var kdft={
 		}
 		return abuf;
 	};
-    this.iftFilterMix=function (resultTables,rstTbl2)
+    this.iftFilterMix=function (resultTables,rstTbl2,vowel3)
 	{
 		var i,j,sumA,sumB;
 		var blen;
@@ -293,14 +293,16 @@ var kdft={
 			if(pos+tableLen>=blen){
 				tableLenC=blen-pos;
 			}
+			var mul,phase;
 		  for(i=0;i<tableLen/2;i++){
 			  for(j=0;j<tableLenC;j++){
 				  //abuf[j+pos]+=this.tables[0][i][j]*(rstTbl2[0][pp2][i]*(resultTables[0][pp][i]+0.001));
 				  //abuf[j+pos]+=this.tables[1][i][j]*(rstTbl2[1][pp2][i]*(resultTables[1][pp][i]+0.001));
 				  //abuf[j+pos]+=this.tables[0][i][j]*(resultTables[0][pp][i]);
 				  //abuf[j+pos]+=this.tables[1][i][j]*(resultTables[1][pp][i]);
-				  
-				  abuf[j+pos]+=Math.sin(j*tau/tableLen*(i+1)+resultTables[3][pp][i])*(rstTbl2[2][0][i]*(resultTables[2][pp][i]+0.00000))/2;
+				  mul=(vowel3[2][130][i]*rstTbl2[2][0][i]*(resultTables[2][pp][i]+0.00000))/2;;
+				  phase=resultTables[3][pp][i];
+				  abuf[j+pos]+=Math.sin(j*tau/tableLen*(i+1)+phase)*mul;
 			  }
 			
 		  }
@@ -341,8 +343,8 @@ kdftCode.initTables(94*2);
 var rrsltvowels=kdftCode.dft(vowelbuf);
 var rrsltCons=kdftCode.dft(constant1buf);
 var rrslt=kdftCode.dft(ttwBuf);
-var testBuf=kdftCode.iftFilterMix(rrsltCons,rrslt);
-for(i=0;i<testBuf.length;i++)testBuf[i]*=100;
+var testBuf=kdftCode.iftFilterMix(rrsltCons,rrslt,rrsltvowels);
+for(i=0;i<testBuf.length;i++)testBuf[i]*=100000;
 //var testBuf=kdftCode.ift(rrsltCons);
 constant1bufDummy=testBuf;
 var ii=0; 
