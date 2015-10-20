@@ -3,7 +3,7 @@
  * @name base646test
  * @artist gpatient
  * @license gpatinet
- * @version 0.0.045
+ * @version 0.0.054
  */
  export default base646test;
   import dbg from 'debug';
@@ -91,6 +91,8 @@ var speechSstr='pu po bo to ko ga fa';
 
 var speechStr_index=0;
 var speechStr_off=0,speechStr_offs=0;
+var speechStr_vowelCode=100;
+
 var constant1arrbuf=new ArrayBuffer(Math.ceil((constant1.length)*6/8)-89);
 var constant1u8=new Uint8Array(constant1arrbuf);
   Base64.decode2(constant1,constant1u8);
@@ -103,10 +105,13 @@ this.speechStr=function (str){
   //this.index=0;
   function playBuf(buf)
   {
+    var snd;
     speechStr_off+=0.25;
 	if(speechStr_off<0)return 0;
 	if(speechStr_offs+3100<speechStr_off)return false;
-	return buf[Math.floor(speechStr_off)%(buf.length)];
+	//snd=buf[Math.floor(speechStr_off)%(buf.length)];
+	snd=kdftCode.iftFilterMixPos(rrsltCons,rrslt,rrsltvowels,speechStr_off,speechStr_vowelCode);
+	return snd;
   }
   out=playBuf(constant1bufDummy);
   if(out===false){
@@ -122,6 +127,7 @@ this.speechStr=function (str){
       
     }
     speechStr_offs=speechStr_off;
+	speechStr_vowelCode=Math.floor(Math.random()*900+20);
     out=playBuf(constant1bufDummy);
   }
   return out;
@@ -264,8 +270,8 @@ var kdft={
 			if(pos+tableLen>=blen){
 				tableLenC=blen-pos;
 			}
-		  for(i=0;i<tableLen/2;i++){
-			  for(j=0;j<tableLenC;j++){
+      for(i=0;i<tableLen/2;i++){
+        for(j=0;j<tableLenC;j++){
 				  abuf[j+pos]+=resultTables[0][pp][i]*this.tables[0][i][j];
 				  abuf[j+pos]+=resultTables[1][pp][i]*this.tables[1][i][j];
 				
@@ -293,14 +299,15 @@ var kdft={
 			if(pos+tableLen>=blen){
 				tableLenC=blen-pos;
 			}
-			var mul,phase;
+			var mul,phase,mul2;
 		  for(i=0;i<tableLen/2;i++){
 			  for(j=0;j<tableLenC;j++){
 				  //abuf[j+pos]+=this.tables[0][i][j]*(rstTbl2[0][pp2][i]*(resultTables[0][pp][i]+0.001));
 				  //abuf[j+pos]+=this.tables[1][i][j]*(rstTbl2[1][pp2][i]*(resultTables[1][pp][i]+0.001));
 				  //abuf[j+pos]+=this.tables[0][i][j]*(resultTables[0][pp][i]);
 				  //abuf[j+pos]+=this.tables[1][i][j]*(resultTables[1][pp][i]);
-				  mul=(vowel3[2][130][i]*rstTbl2[2][0][i]*(resultTables[2][pp][i]+0.00000))/2;;
+				  mul2=-vowel3[2][7][i]+vowel3[2][430][i];
+				  mul=(mul2*rstTbl2[2][10][i]*(resultTables[2][pp][i]+0.00000))/2;;
 				  phase=resultTables[3][pp][i];
 				  abuf[j+pos]+=Math.sin(j*tau/tableLen*(i+1)+phase)*mul;
 			  }
@@ -314,6 +321,34 @@ var kdft={
 		}
 		return abuf;
 	};
+	  this.iftFilterMixPos=function (resultTables,rstTbl2,vowel3,pos,vowelpp)
+	{
+		var i,j;
+		//var blen;
+		var pp=0,pp2=0;
+		var tableLen=this.tableLen;
+		//var tableLenC=tableLen;
+		var out=0;
+		//blen=resultTables[4][0];//tableLen*resultTables[0].length;
+			var mul,phase,mul2;
+			j=pos%tableLen;
+			pp=Math.floor(pos/tableLen);
+		  for(i=0;i<tableLen/2;i++){
+			  
+				  //abuf[j+pos]+=this.tables[0][i][j]*(rstTbl2[0][pp2][i]*(resultTables[0][pp][i]+0.001));
+				  //abuf[j+pos]+=this.tables[1][i][j]*(rstTbl2[1][pp2][i]*(resultTables[1][pp][i]+0.001));
+				  //abuf[j+pos]+=this.tables[0][i][j]*(resultTables[0][pp][i]);
+				  //abuf[j+pos]+=this.tables[1][i][j]*(resultTables[1][pp][i]);
+				  mul2=-vowel3[2][7][i]+vowel3[2][vowelpp][i];
+				  mul=(mul2*10000*rstTbl2[2][10][i]*(resultTables[2][pp][i]+0.00000))/2;;
+				  phase=resultTables[3][pp][i];
+				  out+=Math.sin(j*tau/tableLen*(i+1)+phase)*mul;
+			  }
+			
+		
+		return out;
+	};
+	
 	function sampleEnd(){}
 	return this;
   },
@@ -339,12 +374,12 @@ var vowelbuf=wav8ToFloat32Array(vowelarrbuf);
 
 setVoice(9);
 var kdftCode=kdft.mainCode();
-kdftCode.initTables(94*2);
+kdftCode.initTables(94);
 var rrsltvowels=kdftCode.dft(vowelbuf);
 var rrsltCons=kdftCode.dft(constant1buf);
 var rrslt=kdftCode.dft(ttwBuf);
 var testBuf=kdftCode.iftFilterMix(rrsltCons,rrslt,rrsltvowels);
-for(i=0;i<testBuf.length;i++)testBuf[i]*=100000;
+for(i=0;i<testBuf.length;i++)testBuf[i]*=10000*7;
 //var testBuf=kdftCode.ift(rrsltCons);
 constant1bufDummy=testBuf;
 var ii=0; 
@@ -356,10 +391,11 @@ for(var i=0;i<116;i++)str+=(testBuf[testBuf.length-1-i]*256)+' ['+i+'] ';
 this.dsp=function(t){
   var out=0;
   ii+=0.25;
-  out=testBuf[Math.floor(ii)%(testBuf.length)]*100;
+  //out=testBuf[Math.floor(ii)%(testBuf.length)]*100;
+  out=kdftCode.iftFilterMixPos(rrsltCons,rrslt,rrsltvowels,Math.floor(ii)%(testBuf.length),730);
+  
   //return t%0.01*100; 
   return out;
 };
 return this;
 };
-
